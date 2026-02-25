@@ -1,7 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlin)
@@ -11,6 +10,7 @@ plugins {
     alias(libs.plugins.compose.reload)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.koin)
 }
 
 kotlin {
@@ -89,10 +89,6 @@ kotlin {
             // ktor
             implementation(libs.ktor.okhttp)
         }
-
-        sourceSets.named("commonMain").configure {
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-        }
     }
 }
 
@@ -128,8 +124,6 @@ extensions.configure<ApplicationExtension> {
 
 dependencies {
     debugImplementation(libs.compose.tooling)
-
-    add("kspCommonMainMetadata", libs.koin.compiler)
 }
 
 compose.desktop {
@@ -141,16 +135,5 @@ compose.desktop {
             packageName = "xyz.teamgravity.cmpkoinannotations"
             packageVersion = "1.0.0"
         }
-    }
-}
-
-ksp {
-    arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
-    arg("KOIN_CONFIG_CHECK","true")
-}
-
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if(name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
     }
 }

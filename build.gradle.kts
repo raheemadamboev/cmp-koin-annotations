@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.compose.reload) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.koin) apply false
 }
